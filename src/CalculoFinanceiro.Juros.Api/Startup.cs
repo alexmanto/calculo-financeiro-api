@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CalculoFinanceiro.Juros.Application.Config;
+using CalculoFinanceiro.Juros.Application.Services;
+using CalculoFinanceiro.Juros.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace CalculoFinanceiro.Juros.Api
 {
@@ -25,7 +21,24 @@ namespace CalculoFinanceiro.Juros.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<UrlsConfig>(Configuration.GetSection("urls"));
+
             services.AddControllers();
+
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+            });
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+
+            services.AddSingleton<ICalculoJurosService, CalculoJurosService>();
+            services.AddHttpClient<ITaxaJurosServiceProvider, TaxaJurosServiceProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

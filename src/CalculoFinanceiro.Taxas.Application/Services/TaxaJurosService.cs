@@ -1,4 +1,6 @@
-﻿using CalculoFinanceiro.Taxas.Application.Services.Interfaces;
+﻿using CalculoFinanceiro.Core.Api.Commons;
+using CalculoFinanceiro.Taxas.Application.Services.Interfaces;
+using System.Threading.Tasks;
 
 namespace CalculoFinanceiro.Taxas.Application.Services
 {
@@ -6,6 +8,10 @@ namespace CalculoFinanceiro.Taxas.Application.Services
     {
         public static readonly double TAXA_JUROS = 0.01;
 
-        public double GetTaxaJuros() => TAXA_JUROS;
+        public async Task<Status<double>> GetTaxaJuros()
+        {
+            await Task.CompletedTask;
+            return new Status<double>(value: TAXA_JUROS);
+        }
     }
 }

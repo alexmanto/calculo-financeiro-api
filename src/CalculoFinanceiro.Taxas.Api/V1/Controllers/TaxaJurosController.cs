@@ -1,6 +1,7 @@
 ﻿using CalculoFinanceiro.Core.Api;
 using CalculoFinanceiro.Taxas.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace CalculoFinanceiro.Taxas.Api.V1.Controllers
 {
@@ -14,9 +15,9 @@ namespace CalculoFinanceiro.Taxas.Api.V1.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(_taxaJurosService.GetTaxaJuros());
+            return Ok(await _taxaJurosService.GetTaxaJuros());
         }
     }
 }
