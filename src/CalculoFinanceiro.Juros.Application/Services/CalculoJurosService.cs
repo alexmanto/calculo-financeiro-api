@@ -15,7 +15,7 @@ namespace CalculoFinanceiro.Juros.Application.Services
             _taxaJurosServiceProvider = taxaJurosServiceProvider;
         }
 
-        /// <inheritdoc cref="ICalculoJurosService.CalculaJuros(decimal, int)"/>
+        /// <inheritdoc/>
         public async Task<Status<decimal>> CalculaJuros(decimal valorBase, int meses)
         {
             if (valorBase <= 0) 

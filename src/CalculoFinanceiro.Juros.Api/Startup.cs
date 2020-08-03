@@ -1,16 +1,22 @@
+using CalculoFinanceiro.Core.Api.Commons.Extensions;
+using CalculoFinanceiro.Core.Api.OpenApi;
+using CalculoFinanceiro.Core.Infrastructure.Filters;
+using CalculoFinanceiro.Juros.Api.Extensions;
+using CalculoFinanceiro.Juros.Api.OpenApi;
 using CalculoFinanceiro.Juros.Application.Config;
-using CalculoFinanceiro.Juros.Application.Services;
-using CalculoFinanceiro.Juros.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace CalculoFinanceiro.Juros.Api
 {
     public class Startup
     {
+        private static readonly string API_NAME = "Cálculo de Juros";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -24,36 +30,33 @@ namespace CalculoFinanceiro.Juros.Api
             services.AddOptions();
             services.Configure<UrlsConfig>(Configuration.GetSection("urls"));
 
-            services.AddControllers();
-
-            services.AddApiVersioning(options =>
+            services.AddControllers(options =>
             {
-                options.ReportApiVersions = true;
+                options.Filters.Add(typeof(ValidateModelStateFilter));
+
             });
 
-            services.AddVersionedApiExplorer(options =>
+            services.Configure<ApiBehaviorOptions>(opt =>
             {
-                options.GroupNameFormat = "'v'VVV";
-                options.SubstituteApiVersionInUrl = true;
+                opt.SuppressModelStateInvalidFilter = true;
             });
 
-            services.AddSingleton<ICalculoJurosService, CalculoJurosService>();
-            services.AddHttpClient<ITaxaJurosServiceProvider, TaxaJurosServiceProvider>();
+            services.AddSingleton<IConfigureOpenApiInfo, ConfigureOpenApiInfo>();
+            services.RegisterOpenApi(typeof(Startup).Assembly);
+
+            services.RegisterServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseStatusExceptionHandler();
+
+            app.UseOpenApi(provider, API_NAME);
 
             app.UseEndpoints(endpoints =>
             {

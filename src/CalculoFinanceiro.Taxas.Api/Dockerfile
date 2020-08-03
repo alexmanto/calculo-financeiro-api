@@ -2,15 +2,16 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 80/tcp
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["CalculoFinanceiro.Taxas.Api/CalculoFinanceiro.Taxas.Api.csproj", "CalculoFinanceiro.Taxas.Api/"]
-RUN dotnet restore "CalculoFinanceiro.Taxas.Api/CalculoFinanceiro.Taxas.Api.csproj"
+COPY ["src/CalculoFinanceiro.Taxas.Api/CalculoFinanceiro.Taxas.Api.csproj", "src/CalculoFinanceiro.Taxas.Api/"]
+COPY ["src/CalculoFinanceiro.Core/CalculoFinanceiro.Core.csproj", "src/CalculoFinanceiro.Core/"]
+COPY ["src/CalculoFinanceiro.Taxas.Application/CalculoFinanceiro.Taxas.Application.csproj", "src/CalculoFinanceiro.Taxas.Application/"]
+RUN dotnet restore "src/CalculoFinanceiro.Taxas.Api/CalculoFinanceiro.Taxas.Api.csproj"
 COPY . .
-WORKDIR "/src/CalculoFinanceiro.Taxas.Api"
+WORKDIR "/src/src/CalculoFinanceiro.Taxas.Api"
 RUN dotnet build "CalculoFinanceiro.Taxas.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace CalculoFinanceiro.Juros.Application.Services
 {
+    /// <inheritdoc cref="ITaxaJurosServiceProvider">
     public class TaxaJurosServiceProvider : ITaxaJurosServiceProvider
     {
         private readonly HttpClient _httpClient;
@@ -20,7 +21,7 @@ namespace CalculoFinanceiro.Juros.Application.Services
             _urls = config.Value;
         }
 
-        /// <inheritdoc cref="ITaxaJurosServiceProvider.GetTaxaJuros">
+        ///<inheritdoc/>
         public async Task<Status<double>> GetTaxaJuros()
         {
             Status<double> status;

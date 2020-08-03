@@ -1,0 +1,23 @@
+version: '3.5'
+
+services:
+
+  calcula-juros-api:
+    image: calcula-juros-api
+    build:
+      context: .
+      dockerfile: src/CalculoFinanceiro.Juros.Api/Dockerfile
+    ports:
+      - 8100:80
+      - 8101:80
+
+  taxa-juros-api:
+    image: taxa-juros-api
+    build:
+      context: .
+      dockerfile: src/CalculoFinanceiro.Taxas.Api/Dockerfile
+    ports:
+      - 8200:80
+      - 8201:80
+    depends_on:
+      - calcula-juros-api

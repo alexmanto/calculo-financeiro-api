@@ -1,22 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CalculoFinanceiro.Core.Api.Commons.Extensions;
+using CalculoFinanceiro.Core.Api.OpenApi;
+using CalculoFinanceiro.Taxas.Api.OpenApi;
 using CalculoFinanceiro.Taxas.Application.Services;
 using CalculoFinanceiro.Taxas.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace CalculoFinanceiro.Taxas.Api
 {
     public class Startup
     {
+        private static readonly string API_NAME = "Taxas de Juros";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,33 +27,22 @@ namespace CalculoFinanceiro.Taxas.Api
         {
             services.AddControllers();
 
-            services.AddApiVersioning(options =>
-            {
-                options.ReportApiVersions = true;
-            });
-
-            services.AddVersionedApiExplorer(options =>
-            {
-                options.GroupNameFormat = "'v'VVV";
-                options.SubstituteApiVersionInUrl = true;
-            });
+            services.AddSingleton<IConfigureOpenApiInfo, ConfigureOpenApiInfo>();
+            services.RegisterOpenApi(typeof(Startup).Assembly);
 
             services.AddSingleton<ITaxaJurosService, TaxaJurosService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseStatusExceptionHandler();
+
+            app.UseOpenApi(provider, API_NAME);
 
             app.UseEndpoints(endpoints =>
             {
