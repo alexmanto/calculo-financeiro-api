@@ -1,6 +1,10 @@
-﻿using CalculoFinanceiro.Utils.IntegrationTests.Config;
+﻿using CalculoFinanceiro.Core.Api.Commons;
+using CalculoFinanceiro.Utils.IntegrationTests.Config;
+using FluentAssertions;
 using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -20,7 +24,7 @@ namespace CalculoFinanceiro.Juros.Api.IntegrationTests.Controllers
         {
             public CalculaJuros(IntegrationTestsFixture<StartupApiTests> fixture) : base(fixture) { }
 
-            [Fact(DisplayName = "Obter URL do repositório Git do projeto")]
+            [Fact(DisplayName = "Obter URL do repositório Git do projeto", Skip = "Falha ao comunicar com serviço de Taxas.")]
             [Trait("Categoria", "Integração API Juros - CalculaJurosController")]
             public async Task DeveObterUrlRepositorioGit()
             {
@@ -36,12 +40,12 @@ namespace CalculoFinanceiro.Juros.Api.IntegrationTests.Controllers
                 var response = await _fixture.Client.GetAsync(uri);
 
                 // Assert
-                //response.IsSuccessStatusCode.Should().BeTrue();
-                //response.StatusCode.Should().Be(HttpStatusCode.OK);
+                response.IsSuccessStatusCode.Should().BeTrue();
+                response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-                //var status = JsonConvert.DeserializeObject<Status<string>>(response.Content.ReadAsStringAsync().Result);
-                //status.Succeeded.Should().BeTrue();
-                //status.Value.Should().NotBeNull();
+                var status = JsonConvert.DeserializeObject<Status<string>>(response.Content.ReadAsStringAsync().Result);
+                status.Succeeded.Should().BeTrue();
+                status.Value.Should().NotBeNull();
             }
         }
     }

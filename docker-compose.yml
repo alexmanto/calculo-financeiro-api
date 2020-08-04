@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.8'
 
 services:
 
@@ -9,7 +9,8 @@ services:
       dockerfile: src/CalculoFinanceiro.Juros.Api/Dockerfile
     ports:
       - 8100:80
-      - 8101:80
+    networks:
+      - calculo-financeiro
 
   taxa-juros-api:
     image: taxa-juros-api
@@ -18,6 +19,11 @@ services:
       dockerfile: src/CalculoFinanceiro.Taxas.Api/Dockerfile
     ports:
       - 8200:80
-      - 8201:80
+    networks:
+      - calculo-financeiro
     depends_on:
       - calcula-juros-api
+
+networks:
+  calculo-financeiro:
+    driver: bridge
