@@ -1,5 +1,4 @@
 # CalculoFinanceiro
-============
 
 ## Introdução
 
