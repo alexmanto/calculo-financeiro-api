@@ -40,7 +40,7 @@ namespace CalculoFinanceiro.Juros.Application.Services
 
         private async Task<string> CallService()
         {
-            if (string.IsNullOrEmpty(_urls.Taxas))
+            if (string.IsNullOrEmpty(_urls?.Taxas))
                 throw new NullReferenceException("O serviço de taxas de juros não possui uma URL registrada.");
 
             var uri = _urls.Taxas + UrlsConfig.TaxasOperations.GetTaxaJuros();

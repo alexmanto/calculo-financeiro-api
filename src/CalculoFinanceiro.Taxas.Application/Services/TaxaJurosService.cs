@@ -13,7 +13,7 @@ namespace CalculoFinanceiro.Taxas.Application.Services
         public async Task<Status<double>> GetTaxaJuros()
         {
             await Task.CompletedTask;
-            return new Status<double>(value: TAXA_JUROS);
+            return new Status<double>(TAXA_JUROS);
         }
     }
 }
