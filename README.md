@@ -51,10 +51,10 @@ Será necessário as seguintes ferramentas:
 #### Passos para executar o projeto em ambiente de desenvolvimento
 1. Clonar o repositório
 2. Executar o projeto, conforme as opções abaixo
-* Através do IIS Express, setando o startup de projetos múltiplos, com os projetos `CalculoFinanceiro.Juros.Api` e `CalculoFinanceiro.Taxas.Api`
+* Através do Kestrel, setando o startup de projetos múltiplos, com os projetos `CalculoFinanceiro.Juros.Api` e `CalculoFinanceiro.Taxas.Api`
 * Através do Docker Compose, setando o startup de projeto único e selecionando o `docker-compose`
 3. Launch dos serviços
-* Quando executado através do IIS Express, será feito o launch automático na rota do OpenApi, sendo elas:
+* Quando executado através do Kestrel, será feito o launch automático na rota do OpenApi, sendo elas:
 
     **Juros -** `https://localhost:5001/api/docs/index.html`
 
